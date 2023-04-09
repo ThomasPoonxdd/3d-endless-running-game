@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GroundTile : MonoBehaviour
 {
@@ -14,19 +14,52 @@ public class GroundTile : MonoBehaviour
     public void SpawnObstacle()
     {
         // Choose which obstacle to spawn
-        GameObject obstacleToSpawn = obstaclePrefab;
-        float random = Random.Range(0f, 1f);
-        if (random < tallObstacleProb) 
-        {
-            obstacleToSpawn = tallObstaclePrefab;
-        }
+        //GameObject obstacleToSpawn = obstaclePrefab;
+        
 
         // Choose a random point to spawn the obstacle
-        int obstacleSpawnIndex = Random.Range(2, 5);
-        Transform spawnPoint = transform.GetChild(obstacleSpawnIndex).transform;
-        //Spawn the obstacle at the position
-        // the obstacle will destory when the ground Tile is destroy
-        Instantiate(obstacleToSpawn, spawnPoint.position, Quaternion.identity, transform);
+
+        int count = 0;
+        for (int obstacleSpawnIndex = 2; obstacleSpawnIndex < 5; obstacleSpawnIndex++)
+        {
+            
+            GameObject obstacleToSpawn = obstaclePrefab;
+
+            float prob = Random.Range(0f, 1f);
+            float random = Random.Range(0f, 1f);
+            if (random < tallObstacleProb)
+            {
+                obstacleToSpawn = tallObstaclePrefab;
+            }
+
+            if (prob > 0.5 & count < 2)
+            {
+                Transform spawnPoint = transform.GetChild(obstacleSpawnIndex).transform;
+                //Spawn the obstacle at the position
+                // the obstacle will destory when the ground Tile is destroy
+                Instantiate(obstacleToSpawn, spawnPoint.position, Quaternion.identity, transform);
+                count++;
+            }
+
+        }
+
+        // spawn one obstacle if no enemy spawns
+        if (count == 0)
+        {
+            float random = Random.Range(0f, 1f);
+            GameObject obstacleToSpawn = obstaclePrefab;
+            if (random < tallObstacleProb)
+            {
+                obstacleToSpawn = tallObstaclePrefab;
+            }
+
+            int obstacleSpawnIndex = Random.Range(2, 5);
+            Transform spawnPoint = transform.GetChild(obstacleSpawnIndex).transform;
+            //Spawn the obstacle at the position
+            // the obstacle will destory when the ground Tile is destroy
+            Instantiate(obstacleToSpawn, spawnPoint.position, Quaternion.identity, transform);
+
+        }
     }
     // Start is called before the first frame update
 
