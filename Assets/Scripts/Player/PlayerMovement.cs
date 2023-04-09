@@ -6,6 +6,8 @@ public class PlayerMovement : MonoBehaviour
  {
     bool alive = true;
 
+    [SerializeField] Animator m_Animator;
+
     public float forwardSpeed = 15;
     [SerializeField] Rigidbody rb;
 
@@ -37,6 +39,14 @@ public class PlayerMovement : MonoBehaviour
     void Start() 
     {
         rb.MovePosition(new Vector3(0, 3, 0));
+        //characterController = GetComponent<CharacterController>();
+
+
+    }
+
+    void FixedUpdate()
+    { 
+
     }
 
     // Update is called once per frame
@@ -70,10 +80,9 @@ public class PlayerMovement : MonoBehaviour
         #endregion
 
         #region Movement
-        float radius = GetComponent<Collider>().bounds.size.z;
-        bool isHitByObstacle_z = Physics.Raycast(transform.position, transform.forward, radius-0.5f, obstacleMask);
-        bool isHitByObstacle_xR = Physics.Raycast(transform.position, transform.right, radius + 0.1f, obstacleMask);
-        bool isHitByObstacle_xL = Physics.Raycast(transform.position, -transform.right, radius + 0.1f, obstacleMask);
+
+        float height = GetComponent<Collider>().bounds.size.y;
+        bool isGround = Physics.Raycast(transform.position, Vector3.down, (height / 2) + 0.1f, groundMask);
 
         Vector3 forwardMove = transform.forward * forwardSpeed * Time.deltaTime;
         // Move toward z direction 
@@ -111,7 +120,7 @@ public class PlayerMovement : MonoBehaviour
         else if (desiredLane == 0 && rb.position.x != desiredLane * leftRightPosition)
         {
             //Player.position += new Vector3(0, 0, 10.5f * Time.deltaTime);
-            if (Math.Abs(rb.position.x) < error_Lane)
+            if (Math.Abs(rb.position.x) < error_Lane )
             {
                 horizontalMove = new Vector3(-rb.position.x, 0, 0);
             }
@@ -120,26 +129,20 @@ public class PlayerMovement : MonoBehaviour
             }
             
         }
-
-        if (isHitByObstacle_z)
-        {
-            forwardMove = new Vector3(0, 0, 0);
-        }
-        if (isHitByObstacle_xR & horizontalMove.y > 0)
-        {
-            horizontalMove = new Vector3(0, 0, 0);
-            
-        }
-        if (isHitByObstacle_xL & horizontalMove.y < 0)
-        {
-            horizontalMove = new Vector3(0, 0, 0);
-
-        }
+        
+        
 
         rb.MovePosition(rb.position + forwardMove + horizontalMove);
+        //characterController.Move(forwardMove);
         #endregion
-
-
+        if (isGround)
+        {
+            m_Animator.SetFloat("Speed", forwardSpeed);
+        }
+        else 
+        {
+            m_Animator.SetFloat("Speed", 0);
+        }
 
         if (transform.position.y < -5) 
         {
@@ -167,6 +170,7 @@ public class PlayerMovement : MonoBehaviour
         if (isGround) 
         {
             rb.AddForce(Vector3.up * jumpForce);
+            m_Animator.SetFloat("Jump", 0);
         }
         
     }

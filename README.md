@@ -1,4 +1,4 @@
-# 3d-endless-running-game
+# 3d-endless-running-game exerise 
 
 reference:
 1. https://www.youtube.com/watch?v=DxKIuyOjwPw&list=PL0WgRP7BtOez8O7UAQiW0qAp-XfKZXA9W&index=1
